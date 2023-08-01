@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,14 +21,34 @@ import java.time.LocalDateTime;
 public class Transaction extends BaseEntity {
 
 
-    @Column(nullable = false)
+    @Column(name = "reference")
+    private String reference;
+
+    @Column(name = "provider_reference")
+    private String providerReference;
+
+    @Column(name = "provider_message")
+    private String providerMessage;
+
+    @Column(name = "message")
+    private String message;
+
+    @Column(name = "amount")
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    @Column(name = "transaction_date", nullable = false)
+    @CreationTimestamp
+    @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "status")
+    private int status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
