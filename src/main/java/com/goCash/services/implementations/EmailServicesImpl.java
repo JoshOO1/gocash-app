@@ -1,7 +1,7 @@
 package com.goCash.services.implementations;
 
-import com.goCash.dto.request.EmailDto;
-import com.goCash.services.EmailService;
+import com.goCash.dto.request.SendEmailDto;
+import com.goCash.services.EmailServices;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +17,8 @@ import javax.mail.internet.MimeMessage;
 @Service
 @Async
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+public class EmailServicesImpl implements EmailServices {
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmailServices.class);
 
     private final JavaMailSender mailSender;
 
@@ -27,8 +27,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendMessage(EmailDto request) {
+    public void sendMessage(SendEmailDto request) {
         try {
+
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(request.getMessage(), true);

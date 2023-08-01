@@ -1,4 +1,4 @@
-package com.gusso.gocashtesterapp.utils;
+package com.goCash.utils;
 
 import java.util.Random;
 

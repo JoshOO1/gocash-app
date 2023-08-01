@@ -1,11 +1,10 @@
 package com.goCash.services;
 
 
-import com.goCash.dto.request.EmailDto;
+import com.goCash.dto.request.SendEmailDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface EmailService {
-
-    void sendMessage(EmailDto data);
+public interface EmailServices {
+    void sendMessage(SendEmailDto data);
 }

@@ -8,13 +8,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EmailDto {
+public class SendEmailDto {
 
     private String firstname;
     private String toEmail;
     private String message;
     private String subject;
-    private String OTP;
-    private String token;
 
 }
