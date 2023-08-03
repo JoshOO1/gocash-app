@@ -58,13 +58,13 @@ public class UserServiceImp implements IUserService{
         appUser.setLastLoginDate(LocalDateTime.now());
 
         // Save the updated user entity
-        userRepository.save(appUser);
+        User user = userRepository.save(appUser);
 
         // Generate and send token
         String tokenGenerated = "Bearer " + jwtService.generateToken(authenticationUser);
         log.info("Jwt token generated for the user");
         LoginResponse loginResponse = LoginResponse.builder().token(tokenGenerated)
-                .userName(loginDTO.getEmail()).build();
+                .email(loginDTO.getEmail()).userName(user.getFirstName()).build();
 
         return ApiResponse.builder().message("Successfully logged in").data(loginResponse)
                 .status(true).httpStatus(HttpStatus.OK).build();

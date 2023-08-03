@@ -35,9 +35,6 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String password;
 
-
-
-
     @Column
     private String address;
 
@@ -57,7 +54,6 @@ public class User extends BaseEntity{
     @Column(name = "last_login_date")
     @UpdateTimestamp
     private LocalDateTime lastLoginDate;
-    //Does this concern me?
 
     private boolean isVerified;
 

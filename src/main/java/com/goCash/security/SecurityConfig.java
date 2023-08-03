@@ -44,8 +44,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder()
-    {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -53,8 +52,7 @@ public class SecurityConfig {
     //the Authentication Manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception
-    {
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

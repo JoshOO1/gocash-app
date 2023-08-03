@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,8 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtService {
-    private final String secretToken = "keytokeninNigeriaGbaramatuIshytedecagon2023javasquad15room119inchicagommmfhdgsgsvdbdddbcbcbcbcbbbcbcbcbcbcbcbcbcbcbcbv";
+    @Value("${jwt.secretToken}")
+    private String secretToken;
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretToken);
