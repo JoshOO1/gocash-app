@@ -3,6 +3,7 @@ package com.goCash.entities;
 import com.goCash.enums.Gender;
 import com.goCash.enums.Roles;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,11 +35,8 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String confirmPassword;
 
-    @Column(nullable = false)
-    private String confirmationToken;
+
 
     @Column
     private String address;
@@ -51,13 +49,15 @@ public class User extends BaseEntity{
     private Roles role;
 
     @Column(name = "date_of_birth")
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
 
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
     @Column(name = "last_login_date")
+    @UpdateTimestamp
     private LocalDateTime lastLoginDate;
+    //Does this concern me?
 
     private boolean isVerified;
 

@@ -1,6 +1,6 @@
 package com.goCash.enums;
 
 public enum Roles {
-    MALE,
-    FEMALE
+    USER,
+    ADMIN
 }
