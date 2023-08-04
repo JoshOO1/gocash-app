@@ -16,7 +16,7 @@ import java.net.http.HttpResponse;
 @ToString
 public class ApiResponse <T> {
 
-    private int status;
+    private String status;
     private String message;
     private T data;
 
@@ -25,13 +25,13 @@ public class ApiResponse <T> {
 
 
 
-    public ApiResponse(int status, String message, T data) {
+    public ApiResponse(String status, String message, T data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
-    public ApiResponse(int status, String message, HttpStatus httpStatus) {
+    public ApiResponse(String status, String message, HttpStatus httpStatus) {
         this.status = status;
         this.message = message;
         this.httpStatus = httpStatus;
