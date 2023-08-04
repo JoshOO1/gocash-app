@@ -1,9 +1,9 @@
-package com.goCash.service;
+package com.goCash.services;
 
 import com.goCash.dto.request.LoginRequest;
 import com.goCash.utils.ApiResponse;
 
-public interface IUserService {
+public interface UserService {
 
     ApiResponse login(LoginRequest loginDTO);
 

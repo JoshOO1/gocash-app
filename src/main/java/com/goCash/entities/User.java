@@ -52,7 +52,6 @@ public class User extends BaseEntity{
     private LocalDateTime registrationDate;
 
     @Column(name = "last_login_date")
-    @UpdateTimestamp
     private LocalDateTime lastLoginDate;
 
     private boolean isVerified;

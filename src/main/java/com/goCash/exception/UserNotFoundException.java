@@ -2,19 +2,19 @@ package com.goCash.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class CustomException extends RuntimeException{
+public class UserNotFoundException extends RuntimeException{
     private String message;
     private HttpStatus httpStatus;
 
-    public CustomException(String message) {
+    public UserNotFoundException(String message) {
         super(message);
     }
 
-    public CustomException( HttpStatus httpStatus) {
+    public UserNotFoundException(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
     }
 
-    public CustomException(String message, HttpStatus httpStatus) {
+    public UserNotFoundException(String message, HttpStatus httpStatus) {
         this.message = message;
         this.httpStatus = httpStatus;
     }

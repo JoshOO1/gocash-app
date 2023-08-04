@@ -1,6 +1,6 @@
 package com.goCash.security;
 
-import com.goCash.exception.CustomException;
+import com.goCash.exception.UserNotFoundException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -15,6 +15,7 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtService {
+
     @Value("${jwt.secretToken}")
     private String secretToken;
 
@@ -56,7 +57,7 @@ public class JwtService {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            throw new CustomException("Invalid Token");
+            throw new UserNotFoundException("Invalid Token");
         }
     }
 }

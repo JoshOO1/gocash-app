@@ -14,9 +14,10 @@ import java.util.Arrays;
 @Slf4j
 @RestControllerAdvice
 public class AppExceptionHandler {
-    @ExceptionHandler(CustomException.class)
+
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponse> handleCustomException(CustomException exception) {
+    public ResponseEntity<ApiResponse> handleUserNotFoundException(UserNotFoundException exception) {
         log.info("Please dont break my application");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
                 .message(exception.getMessage())
@@ -24,13 +25,12 @@ public class AppExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<?> handleGlobalExceptions(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<ApiResponse> handleGlobalExceptions(MethodArgumentNotValidException ex) {
         String[] errors = ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
         ApiResponse response = ApiResponse.builder()
-                .status(false)
+                .status("00")
                 .message(Arrays.toString(errors))
                 .build();
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

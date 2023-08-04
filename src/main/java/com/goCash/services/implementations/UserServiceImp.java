@@ -1,11 +1,12 @@
-package com.goCash.service;
+package com.goCash.services.implementations;
 
 import com.goCash.dto.request.LoginRequest;
 import com.goCash.dto.response.LoginResponse;
 import com.goCash.entities.User;
-import com.goCash.exception.CustomException;
+import com.goCash.exception.UserNotFoundException;
 import com.goCash.repository.UserRepository;
 import com.goCash.security.JwtService;
+import com.goCash.services.UserService;
 import com.goCash.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,15 +24,14 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImp implements IUserService{
+public class UserServiceImp implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
 
     @Override
-    public ApiResponse login(LoginRequest loginDTO) {
+    public ApiResponse<LoginResponse> login(LoginRequest loginDTO) {
         log.info("Request to login at the service layer");
 
         Authentication authenticationUser;
@@ -42,9 +41,13 @@ public class UserServiceImp implements IUserService{
             );
             log.info("Authenticated the User by the Authentication manager");
         } catch (DisabledException es) {
-            throw new CustomException("Disabled exception " + es.getMessage());
+            return ApiResponse.<LoginResponse>builder()
+                    .message("Disabled exception occurred")
+                    .status("01")
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
         } catch (BadCredentialsException e) {
-            throw new CustomException("BadException " + e.getMessage());
+            throw new UserNotFoundException("BadException " + e.getMessage());
         }
 
         // Tell securityContext that this user is in the context
@@ -52,7 +55,7 @@ public class UserServiceImp implements IUserService{
 
         // Retrieve the user from the repository
         User appUser = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() ->
-                new CustomException("User not found"));
+                new UserNotFoundException("User not found"));
 
         // Update the lastLoginDate field
         appUser.setLastLoginDate(LocalDateTime.now());
@@ -64,11 +67,18 @@ public class UserServiceImp implements IUserService{
         String tokenGenerated = "Bearer " + jwtService.generateToken(authenticationUser);
         log.info("Jwt token generated for the user");
         LoginResponse loginResponse = LoginResponse.builder().token(tokenGenerated)
-                .email(loginDTO.getEmail()).userName(user.getFirstName()).build();
+                .email(loginDTO.getEmail()).firstName(user.getFirstName())
+                .role(user.getRole())
+                .lastName(user.getLastName()).build();
 
-        return ApiResponse.builder().message("Successfully logged in").data(loginResponse)
-                .status(true).httpStatus(HttpStatus.OK).build();
+        return ApiResponse.<LoginResponse>builder()
+                .message("Successfully logged in")
+                .data(loginResponse)
+                .status("00")
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
+
 
 
 
