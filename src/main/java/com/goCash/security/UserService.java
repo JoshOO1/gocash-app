@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
         log.info(username);
         if (appUser == null)
         {
-            return (UserDetails) ApiResponse.builder().status("01").message("User not found")
+            return (UserDetails) ApiResponse.builder().code("01").message("User not found")
                     .httpStatus(HttpStatus.NO_CONTENT);
         }
         log.info("User details returned as UserDetails object");

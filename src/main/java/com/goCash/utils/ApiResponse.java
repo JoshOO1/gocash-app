@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
-import java.net.http.HttpResponse;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +14,7 @@ import java.net.http.HttpResponse;
 @ToString
 public class ApiResponse <T> {
 
-    private String status;
+    private String code;
     private String message;
     private T data;
 
@@ -25,14 +23,14 @@ public class ApiResponse <T> {
 
 
 
-    public ApiResponse(String status, String message, T data) {
-        this.status = status;
+    public ApiResponse(String code, String message, T data) {
+        this.code = code;
         this.message = message;
         this.data = data;
     }
 
-    public ApiResponse(String status, String message, HttpStatus httpStatus) {
-        this.status = status;
+    public ApiResponse(String code, String message, HttpStatus httpStatus) {
+        this.code = code;
         this.message = message;
         this.httpStatus = httpStatus;
     }
