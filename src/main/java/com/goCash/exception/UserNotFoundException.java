@@ -2,7 +2,7 @@ package com.goCash.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundException extends RuntimeException{
+public class UserNotFoundException extends RuntimeException {
     private String message;
     private HttpStatus httpStatus;
 

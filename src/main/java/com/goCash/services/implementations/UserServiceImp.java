@@ -1,16 +1,26 @@
 package com.goCash.services.implementations;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goCash.dto.request.LoginRequest;
+import com.goCash.dto.request.UserRegistrationRequest;
+import com.goCash.dto.response.FlutterWaveAccountResponse;
+import com.goCash.dto.response.FlutterWaveErrorResponse;
 import com.goCash.dto.response.LoginResponse;
 import com.goCash.entities.User;
+import com.goCash.entities.WalletAccount;
 import com.goCash.exception.UserNotFoundException;
 import com.goCash.repository.UserRepository;
+import com.goCash.repository.WalletRepository;
 import com.goCash.security.JwtService;
+import com.goCash.services.FlutterWaveService;
 import com.goCash.services.UserService;
 import com.goCash.utils.ApiResponse;
+import com.goCash.utils.EntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -28,6 +38,59 @@ public class UserServiceImp implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
+    private final EntityMapper entityMapper;
+    private final FlutterWaveService flutterWaveService;
+    private final ObjectMapper objectMapper;
+
+    @Override
+    public ApiResponse<String> registerUser(UserRegistrationRequest request) {
+        log.info("Check if the user already exists");
+        boolean doesUserExist = userRepository.existsByEmail(request.getEmail());
+        if (doesUserExist) {
+            return new ApiResponse<>("01", "email already taken", HttpStatus.BAD_REQUEST);
+        }
+        ResponseEntity<String> response = flutterWaveService.createVirtualAcccount(request);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            FlutterWaveAccountResponse apiResponse;
+            try {
+                apiResponse = objectMapper.readValue(response.getBody(), FlutterWaveAccountResponse.class);
+            } catch (JsonProcessingException e) {
+                log.info(response.getBody());
+                throw new RuntimeException(e);
+            }
+
+            log.info(" create the wallet");
+            assert apiResponse != null;
+            User newuser = entityMapper.dtoToUser(request);
+            userRepository.save(newuser);
+            WalletAccount newWallet = WalletAccount.builder()
+                    .accountNumber(apiResponse.getData().getAccountNumber())
+                    .balance(Double.parseDouble(apiResponse.getData().getAmount()))
+                    .user(newuser)
+                    .build();
+            walletRepository.save(newWallet);
+            log.info("successully saved the wallet");
+
+            return new ApiResponse<>("00", "User successfully created", HttpStatus.CREATED);
+
+
+        } else {
+            log.info("There is an error in the request.");
+            try {
+                FlutterWaveErrorResponse flutterWaveErrorResponse = objectMapper.readValue(response.getBody(), FlutterWaveErrorResponse.class);
+                return ApiResponse.<String>builder()
+                        .message(flutterWaveErrorResponse.getMessage())
+                        .code("01")
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .build();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+    }
 
 
     @Override
@@ -43,7 +106,7 @@ public class UserServiceImp implements UserService {
         } catch (DisabledException es) {
             return ApiResponse.<LoginResponse>builder()
                     .message("Disabled exception occurred")
-                    .status("01")
+                    .code("01")
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         } catch (BadCredentialsException e) {
@@ -74,12 +137,10 @@ public class UserServiceImp implements UserService {
         return ApiResponse.<LoginResponse>builder()
                 .message("Successfully logged in")
                 .data(loginResponse)
-                .status("00")
+                .code("00")
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
-
-
 
 
 }
