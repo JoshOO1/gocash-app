@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 
 public class WalletAccount extends BaseEntity{
 
-    private Long accountNumber;
-    private BigDecimal balance;
+    private String accountNumber;
+    private double balance;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

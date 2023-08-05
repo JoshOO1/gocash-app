@@ -2,19 +2,19 @@ package com.goCash.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundException extends RuntimeException {
+public class PassWordMatcher extends RuntimeException {
     private String message;
     private HttpStatus httpStatus;
 
-    public UserNotFoundException(String message) {
-        super(message);
+    public PassWordMatcher(String message) {
+        this.message = message;
     }
 
-    public UserNotFoundException(HttpStatus httpStatus) {
+    public PassWordMatcher(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
     }
 
-    public UserNotFoundException(String message, HttpStatus httpStatus) {
+    public PassWordMatcher(String message, HttpStatus httpStatus) {
         this.message = message;
         this.httpStatus = httpStatus;
     }

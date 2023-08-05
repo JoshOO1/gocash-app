@@ -23,12 +23,20 @@ public class AppExceptionHandler {
                 .message(exception.getMessage())
                 .build());
     }
+    @ExceptionHandler(PassWordMatcher.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ApiResponse>handlePasswordMatcherException(PassWordMatcher exception){
+        log.info("I only come up if the 2 passwords provided by the user is dagbo");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
+                .message(exception.getMessage())
+                .build());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ApiResponse> handleGlobalExceptions(MethodArgumentNotValidException ex) {
         String[] errors = ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
         ApiResponse response = ApiResponse.builder()
-                .status("00")
+                .code("00")
                 .message(Arrays.toString(errors))
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
