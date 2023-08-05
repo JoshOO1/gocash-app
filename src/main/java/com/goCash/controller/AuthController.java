@@ -5,6 +5,7 @@ import com.goCash.dto.request.UserRegistrationRequest;
 import com.goCash.dto.response.LoginResponse;
 import com.goCash.services.UserService;
 import com.goCash.utils.ApiResponse;
+import com.goCash.utils.validations.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,14 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final UserService appUserService;
+    private final PasswordValidator passwordValidator;
+
 
 
     @PostMapping(path = "/register")
-    public ResponseEntity<ApiResponse<?>> registerUser(@RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<ApiResponse<?>> registerUser(@RequestBody @Valid UserRegistrationRequest request) {
         log.info("controller register: register user :: [{}] ::", request.getEmail());
+        passwordValidator.isValid(request);
         ApiResponse<String> response = appUserService.registerUser(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

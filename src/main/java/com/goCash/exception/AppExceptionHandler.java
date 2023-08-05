@@ -23,9 +23,9 @@ public class AppExceptionHandler {
                 .message(exception.getMessage())
                 .build());
     }
-    @ExceptionHandler(PassWordMatcher.class)
+    @ExceptionHandler(PasswordMatcherException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponse>handlePasswordMatcherException(PassWordMatcher exception){
+    public ResponseEntity<ApiResponse>handlePasswordMatcherException(PasswordMatcherException exception){
         log.info("I only come up if the 2 passwords provided by the user is dagbo");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder()
                 .message(exception.getMessage())

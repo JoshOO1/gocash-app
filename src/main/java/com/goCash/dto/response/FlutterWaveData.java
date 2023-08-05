@@ -28,7 +28,6 @@ public class FlutterWaveData {
     @JsonProperty(value = "bank_name")
     private String bankName;
     @JsonProperty(value = "created_at")
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
     @JsonProperty(value = "expiry_date")
     private String expiryDate;
