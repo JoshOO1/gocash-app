@@ -1,6 +1,5 @@
 package com.goCash.controller;
 
-import com.goCash.services.UserService;
 import com.goCash.services.implementations.UserServiceImp;
 import com.goCash.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
-public class ViewProfileController {
+public class UserController {
     private final UserServiceImp appUserService;
 
 
