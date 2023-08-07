@@ -7,6 +7,7 @@ import com.goCash.dto.request.UserRegistrationRequest;
 import com.goCash.dto.response.FlutterWaveAccountResponse;
 import com.goCash.dto.response.FlutterWaveErrorResponse;
 import com.goCash.dto.response.LoginResponse;
+import com.goCash.dto.response.UserResponse;
 import com.goCash.entities.User;
 import com.goCash.entities.WalletAccount;
 import com.goCash.exception.UserNotFoundException;
@@ -30,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class UserServiceImp implements UserService {
     private final EntityMapper entityMapper;
     private final FlutterWaveService flutterWaveService;
     private final ObjectMapper objectMapper;
+
 
     @Override
     public ApiResponse<String> registerUser(UserRegistrationRequest request) {
@@ -142,5 +145,24 @@ public class UserServiceImp implements UserService {
                 .build();
     }
 
-
+@Override
+    public ApiResponse<UserResponse> getUser(Long userId){
+        log.info("check if user exists");
+    Optional<User> user = userRepository.findById(userId);
+    if (user.isEmpty()) {
+        return new ApiResponse("01", "User does not exist", HttpStatus.BAD_REQUEST);
+    }
+    log.info("check for the wallet that belongs to the user");
+    Optional<WalletAccount> walletAccount = walletRepository.findByUser(user.get());
+    if (walletAccount.isEmpty()) {
+        return new ApiResponse("01", "This wallet does not exist", HttpStatus.BAD_REQUEST);
+    }
+    log.info("user exist, create a new user");
+    UserResponse userResponse = new UserResponse();
+    userResponse.setFirstName(user.get().getFirstName());
+    userResponse.setLastName(user.get().getLastName());
+    userResponse.setAccountNumber(walletAccount.get().getAccountNumber());
+    userResponse.setEmail(user.get().getEmail());
+    return new ApiResponse("00","Successful",userResponse);
+}
 }
