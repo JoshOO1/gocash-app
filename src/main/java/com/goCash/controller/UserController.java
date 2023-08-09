@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/api")
 public class UserController {
     private final UserServiceImp appUserService;
 
 
-    @GetMapping("/view_user/{id}")
-    public ResponseEntity<ApiResponse> viewUser(@PathVariable String id){
+    @GetMapping("/user")
+    public ResponseEntity<ApiResponse> viewUser(){
         log.info("call the userservice to view user profiles");
-        ApiResponse apiResponse = appUserService.getUser(Long.valueOf(id));
+        ApiResponse apiResponse = appUserService.getUser();
         return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
     }
 }

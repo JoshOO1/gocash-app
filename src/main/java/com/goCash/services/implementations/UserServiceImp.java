@@ -18,6 +18,7 @@ import com.goCash.services.FlutterWaveService;
 import com.goCash.services.UserService;
 import com.goCash.utils.ApiResponse;
 import com.goCash.utils.EntityMapper;
+import com.goCash.utils.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,7 @@ public class UserServiceImp implements UserService {
     private final EntityMapper entityMapper;
     private final FlutterWaveService flutterWaveService;
     private final ObjectMapper objectMapper;
+    private final Util util;
 
 
     @Override
@@ -146,9 +148,10 @@ public class UserServiceImp implements UserService {
     }
 
 @Override
-    public ApiResponse<UserResponse> getUser(Long userId){
+    public ApiResponse<UserResponse> getUser(){
+        String loggedInUserName = util.getLoginUser();
         log.info("check if user exists");
-    Optional<User> user = userRepository.findById(userId);
+    Optional<User> user = userRepository.findByEmail(loggedInUserName);
     if (user.isEmpty()) {
         return new ApiResponse("01", "User does not exist", HttpStatus.BAD_REQUEST);
     }

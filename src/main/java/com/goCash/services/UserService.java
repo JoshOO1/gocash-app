@@ -13,6 +13,5 @@ public interface UserService {
     ApiResponse login(LoginRequest loginDTO);
     ApiResponse<String> registerUser(UserRegistrationRequest request);
 
-
-    ApiResponse<UserResponse> getUser(Long userId);
+    ApiResponse<UserResponse> getUser();
 }
